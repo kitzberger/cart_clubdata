@@ -1,0 +1,39 @@
+plugin.tx_cartclubdata {
+    view {
+        templateRootPaths {
+        		0 = EXT:cart_clubdata/Resources/Private/Templates/
+        		1 = {$plugin.tx_cartclubdata.view.templateRootPath}
+        		}
+        		partialRootPaths  {
+        		0 = EXT:cart_clubdata/Resources/Private/Partials/
+        		1 = {$plugin.tx_cartclubdata.view.partialRootPath}
+        		}
+        		layoutRootPaths {
+        		0 = EXT:cart_clubdata/Resources/Private/Layouts/
+        	    1 = {$plugin.tx_cartclubdata.view.layoutRootPath}
+        	   }
+    }
+
+    persistence {
+        storagePid < plugin.tx_ckclubdata.persistence.storagePid
+    }
+}
+
+module.tx_cartclubdata  < plugin.tx_ckclubdata
+
+plugin.tx_myextension {
+    persistence {
+        classes {
+            MyVendor\MyExtension\Domain\Model\Person {
+                mapping {
+                    tableName = tt_address
+                    recordType = \MyVendor\MyExtension\Domain\Model\Person
+                    columns {
+                        birthday.mapOnProperty = dateOfBirth
+                        street.mapOnProperty = thoroughfare
+                    }
+                }
+            }
+        }
+    }
+}

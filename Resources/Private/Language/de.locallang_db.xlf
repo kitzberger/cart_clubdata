@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+    <file source-language="en" target-language="de" datatype="plaintext" original="messages" date="2017-02-28T80:39:00Z" product-name="cart_clubdata">
+        <header/>
+        <body>
+              <trans-unit id="tx_cartclubdata.module.clubdata">
+                <source>Clubdata Backend</source>
+                <target>Clubdata Backend</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

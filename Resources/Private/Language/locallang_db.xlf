@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+    <file source-language="en" datatype="plaintext" original="messages" date="2017-02-28T12:48:00Z" product-name="cart_clubdata">
+        <header/>
+        <body>
+            <trans-unit id="tx_cartclubdata.module.clubdata">
+                <source>Clubdata Backend</source>
+            </trans-unit>
+            	<trans-unit id="tx_cartclubdata_domain_model_pause">
+            				<source>Pause</source>
+            			</trans-unit>
+            			<trans-unit id="tx_cartclubdata_domain_model_pause.title">
+            				<source>Title</source>
+            			</trans-unit>
+            			<trans-unit id="tx_cartclubdata_domain_model_pause.fromdate">
+            				<source>Fromdate</source>
+            			</trans-unit>
+            			<trans-unit id="tx_cartclubdata_domain_model_pause.todate">
+            				<source>Todate</source>
+            			</trans-unit>
+        </body>
+    </file>
+</xliff>
