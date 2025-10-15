@@ -125,10 +125,10 @@ class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
             }
         }
         if (!$usercheck) {
-          $this->now = $this->settings['refund']['showFrom'];
+            $this->now = $this->settings['refund']['showFrom'];
             $filtered_programs_refund = $this->filterData();
-          $this->view->assign('RefundPrograms', $filtered_programs_refund);
-            }
+            $this->view->assign('RefundPrograms', $filtered_programs_refund);
+        }
         $options = array();
         $options[] = array(
             'id' => 'future',
