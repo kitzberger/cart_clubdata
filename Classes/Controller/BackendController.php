@@ -136,18 +136,9 @@ class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
             }
         }
         if (!$usercheck) {
-          $this->now = $this->settings['refund']['showFrom'];
-          //\TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($this->settings['refund']['denyGroups']);
-          $programs = $this->programRepository->findWithinMonth(array('disposed' => 1), 0, 0, 1, $this->now);
-            /*$refund_programs = array();
-            foreach ($programs as $program_refund) {
-                $title = $program_refund->getTitle().' '.$program_refund->getDatetime()->format('d.m.y H:i');
-                $program_refund->setTitle($title);
-                $refund_programs[]=$program_refund;
-            }*/
-            //\TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($refund_programs);
-             $this->view->assign('RefundPrograms', $programs);
-
+            $this->now = $this->settings['refund']['showFrom'];
+            $programs = $this->programRepository->findWithinMonth(array('disposed' => 1), 0, 0, 1, $this->now);
+            $this->view->assign('RefundPrograms', $programs);
         }
         $options = array();
         $options[] = array(
@@ -534,7 +525,7 @@ class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
                     }
                 }
             }
-            \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($filtered_orders);
+            //\TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($filtered_orders);
             foreach ($filtered_orders as $order) {
                 $this->handleRefund($order,$sku);
             }
