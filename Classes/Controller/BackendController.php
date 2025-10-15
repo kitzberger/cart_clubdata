@@ -429,8 +429,8 @@ class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
             foreach ($failed as $order) {
                 if (!is_null($order->getItem())) {
                     if (
-                    $order->getItem()->getShipping()->getStatus()  != 'shipped'
-                    OR $order->getItem()->getPayment()->getStatus()!='paid') {
+                        $order->getItem()->getShipping()->getStatus() != 'shipped'
+                        or $order->getItem()->getPayment()->getStatus() != 'paid') {
                         $fehler += $order->getCount();
                     }
                 }
