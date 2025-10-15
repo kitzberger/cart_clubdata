@@ -20,20 +20,3 @@ plugin.tx_cartclubdata {
 }
 
 module.tx_cartclubdata  < plugin.tx_ckclubdata
-
-plugin.tx_myextension {
-    persistence {
-        classes {
-            MyVendor\MyExtension\Domain\Model\Person {
-                mapping {
-                    tableName = tt_address
-                    recordType = \MyVendor\MyExtension\Domain\Model\Person
-                    columns {
-                        birthday.mapOnProperty = dateOfBirth
-                        street.mapOnProperty = thoroughfare
-                    }
-                }
-            }
-        }
-    }
-}
