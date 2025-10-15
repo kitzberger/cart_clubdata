@@ -87,11 +87,7 @@ class ProductUtility
                 if ($productProduct->getMaxTickets() > 0) {
                     $handleStock = true;
                     $cleansold =  $productProduct->getDisposedTickets();
-                    //if ($cleansold)
                     $stock = $productProduct->getMaxTickets() - $cleansold;
-                    //else
-                    //    $stock = $productProduct->getmaxTickets() - $productProduct->getsoldTickets() + $productProduct->getCancelledTickets();
-                    //$stock --;
                 }
 
 

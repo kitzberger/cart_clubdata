@@ -159,10 +159,7 @@ class OrderUtility
         $stock = 0;
         if ($program->getMaxTickets() > 0) {
             $cleansold = $program->getDisposedTickets();
-            //if ($cleansold)
-             $stock = $program->getMaxTickets() - $cleansold;
-            //else
-                //$stock = $program->getMaxTickets() - $program->getSoldTickets() + $program->getCancelledTickets();
+            $stock = $program->getMaxTickets() - $cleansold;
         }
         $want = $product->getQuantity();
         //\TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($sold);
