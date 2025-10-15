@@ -6,18 +6,18 @@
             <trans-unit id="tx_cartclubdata.module.clubdata">
                 <source>Clubdata Backend</source>
             </trans-unit>
-            	<trans-unit id="tx_cartclubdata_domain_model_pause">
-            				<source>Pause</source>
-            			</trans-unit>
-            			<trans-unit id="tx_cartclubdata_domain_model_pause.title">
-            				<source>Title</source>
-            			</trans-unit>
-            			<trans-unit id="tx_cartclubdata_domain_model_pause.fromdate">
-            				<source>Fromdate</source>
-            			</trans-unit>
-            			<trans-unit id="tx_cartclubdata_domain_model_pause.todate">
-            				<source>Todate</source>
-            			</trans-unit>
+            <trans-unit id="tx_cartclubdata_domain_model_pause">
+                <source>Pause</source>
+            </trans-unit>
+            <trans-unit id="tx_cartclubdata_domain_model_pause.title">
+                <source>Title</source>
+            </trans-unit>
+            <trans-unit id="tx_cartclubdata_domain_model_pause.fromdate">
+                <source>Fromdate</source>
+            </trans-unit>
+            <trans-unit id="tx_cartclubdata_domain_model_pause.todate">
+                <source>Todate</source>
+            </trans-unit>
         </body>
     </file>
 </xliff>
