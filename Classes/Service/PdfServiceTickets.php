@@ -34,55 +34,6 @@ class PdfServiceTickets extends \Extcode\CartPdf\Service\PdfService
     public function injectProgramRepository(\TYPO3\CkClubdata\Domain\Repository\ProgramRepository $programRepository) {
         $this->pogramRepository = $programRepository;
     }
-
-    /**
-     * @param \Extcode\Cart\Domain\Model\Order\Item $orderItem
-     * @param string $pdfType
-     */
-    public function createPdf(\Extcode\Cart\Domain\Model\Order\Item $orderItem, $pdfType)
-    {
-        $this->setPluginSettings($pdfType);
-
-        $pdfFilename = '/tmp/tempfile'.$orderItem->getOrderNumber().'.pdf';
-        //$pdfFilename = $_SERVER['DOCUMENT_ROOT'].'/fileadmin/tx_cart/temp/tempfile.pdf';
-
-        $this->renderPdf($pdfType, $orderItem);
-
-        $storageRepository = $this->objectManager->get(
-            \TYPO3\CMS\Core\Resource\StorageRepository::class
-        );
-
-        $getNumber = 'get' . ucfirst($pdfType) . 'Number';
-        $newFileName = $orderItem->$getNumber() . '.pdf';
-
-        if (file_exists($pdfFilename)) {
-            /** @var \TYPO3\CMS\Core\Resource\ResourceStorage $storage */
-            $storage = $storageRepository->findByUid($this->pdfSettings['storageRepository']);
-            $targetFolder = $storage->getFolder($this->pdfSettings['storageFolder']);
-
-            if (class_exists('\TYPO3\CMS\Core\Resource\DuplicationBehavior')) {
-                $conflictMode = \TYPO3\CMS\Core\Resource\DuplicationBehavior::RENAME;
-            } else {
-                $conflictMode = 'changeName';
-            }
-
-            $falFile = $targetFolder->addFile(
-                $pdfFilename,
-                $newFileName,
-                $conflictMode
-            );
-
-            $falFileReference = $this->createFileReferenceFromFalFileObject($falFile);
-
-            $addPdfFunction = 'add' . ucfirst($pdfType) . 'Pdf';
-            $orderItem->$addPdfFunction($falFileReference);
-        }
-
-        $this->itemRepository->update($orderItem);
-        // Not neccessary since 6.2
-        $this->persistenceManager->persistAll();
-        unlink($pdfFilename);
-    }
     /**
      * @param string $pdfType
      * @param \Extcode\Cart\Domain\Model\Order\Item $orderItem
@@ -187,8 +138,7 @@ class PdfServiceTickets extends \Extcode\CartPdf\Service\PdfService
             }
         }
 
-        $pdfFilename = '/tmp/tempfile'.$orderItem->getOrderNumber().'.pdf';
-        //$pdfFilename = $_SERVER['DOCUMENT_ROOT'].'/fileadmin/tx_cart/temp/tempfile.pdf';
+        $pdfFilename = '/tmp/tempfile.pdf';
 
         $this->pdf->Output($pdfFilename, 'F');
 
@@ -226,7 +176,7 @@ class PdfServiceTickets extends \Extcode\CartPdf\Service\PdfService
      */
     protected function renderTicketBody($pdfType, $orderItem)
     {
-        \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($orderItem);
+        //\TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($orderItem);
         //exit;
 
         $bodyOut = '';
@@ -272,7 +222,7 @@ class PdfServiceTickets extends \Extcode\CartPdf\Service\PdfService
                         //\TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($partConfig);
                         //exit;
                     }
-                \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($code);
+
                 $this->pdf->write1DBarcode($code, 'EAN13', '150', $ypos, '', 18, 0.4, $style, 'N');
                 //if ($mod) $ypos = 30;
                 //  else $ypos += 80;
