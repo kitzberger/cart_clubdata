@@ -222,7 +222,7 @@ class PdfServiceTickets extends \Extcode\CartPdf\Service\PdfService
                         //\TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($partConfig);
                         //exit;
                     }
-
+                //\TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($code);
                 $this->pdf->write1DBarcode($code, 'EAN13', '150', $ypos, '', 18, 0.4, $style, 'N');
                 //if ($mod) $ypos = 30;
                 //  else $ypos += 80;
