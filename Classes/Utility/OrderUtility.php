@@ -123,7 +123,7 @@ class OrderUtility
 
         foreach ($params['orderItem']->getProducts() as $product) {
             $program = $this->programRepository->findByUid($product->getSku());
-            $sold = $program->getdisposedTickets();
+            $sold = $program->getSoldTickets();
             $want = $product->getCount();
             $new = $sold;
             $init = $new;
@@ -158,8 +158,7 @@ class OrderUtility
         //\TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($program);
         $stock = 0;
         if ($program->getMaxTickets() > 0) {
-            $cleansold = $program->getDisposedTickets();
-            $stock = $program->getMaxTickets() - $cleansold;
+            $stock = $program->getMaxTickets() - $program->getSoldTickets();
         }
         $want = $product->getQuantity();
         //\TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($sold);

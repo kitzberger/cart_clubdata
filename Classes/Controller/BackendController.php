@@ -105,24 +105,13 @@ class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
 
 
         $this->now = $this->settings['scanner']['showFrom'];
-        $filter = array('disposed' => 1,
-            'state_what'=>'not',
-            'states' => '3,6'
-        );
-        $programs = $this->programRepository->findWithinMonth($filter, 0, 0, 1, $this->now);
-        //\TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($programs);
+
+        $filtered_programs_export = $this->filterData();
+        //\TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($filtered_programs_export);
         //exit;
-        $export_programs = [];
-        foreach ($programs as $program) {
-            $title = $program->getTitle().' '.$program->getDatetime()->format('d.m.y H:i');
-            $program->setTitle($title);
-            $export_programs[]=$program;
-        }
 
 
-
-        $this->view->assign('ExportPrograms', $export_programs);
-        //$this->view->assign('ExportUids', $uids_export);
+        $this->view->assign('ExportPrograms', $filtered_programs_export);
         //\TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($filtered_programs_export);
         //exit;
         $usercheck = false;
@@ -137,8 +126,8 @@ class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
         }
         if (!$usercheck) {
             $this->now = $this->settings['refund']['showFrom'];
-            $programs = $this->programRepository->findWithinMonth(array('disposed' => 1), 0, 0, 1, $this->now);
-            $this->view->assign('RefundPrograms', $programs);
+            $filtered_programs_refund = $this->filterData();
+            $this->view->assign('RefundPrograms', $filtered_programs_refund);
         }
         $options = array();
         $options[] = array(
@@ -160,7 +149,7 @@ class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
         $uids = array();
 
         foreach ($programs as $program) {
-            $uids[$program->getDatetime()->format('U')]=$program->getUid();
+            $uids[]=$program->getUid();
 
         }
         //\TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($uids);
@@ -174,36 +163,16 @@ class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
             $filtered = array();
             $failed = array();
             foreach ($orders as $order) {
-                if (!is_null($order->getItem())) {
-                    $title = substr($order->getTitle(), 0, -15);
-                    $date = array_search($order->getSku(), $uids);
-                    $date = date('d.m.y H:i', $date);
-                    $order->setAdditionalData($title . ' ' . $date);
-                    $item = $order->getItem();
-                    if ($item->getShipping()->getStatus() == 'shipped'
-                        and $item->getPayment()->getStatus() == 'paid') { //achtung Producte unten werden geschrieben
-                        $filtered[] = $order;
-                    } else $failed[] = $order;
-                }
+                $item = $order->getItem();
+                if ($item->getShipping()->getStatus()=='shipped'
+                    AND $item->getPayment()->getStatus()=='paid') { //achtung Producte unten werden geschrieben
+                    $filtered[]=$order;
+                } else $failed[] = $order;
             }
+        //\TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($failed);
+        //exit;
 
-        $sort = [];
-        foreach ($filtered as $object) {
-            //\TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump(date('Y-m-d H:i',strtotime(substr($object->getAdditionalData(),-14))));
-            //exit;
-            $sort[] = date('Y-m-d H:i',strtotime(substr($object->getAdditionalData(),-14))); //any object field
-        }
-
-        array_multisort($sort, SORT_ASC, $filtered);
-
-        $values = array(
-            'dates' => $uids,
-            'orders' => $filtered
-        );
-        \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($values);
-        exit;
-
-        return $values;
+        return $filtered;
 
     }
 
@@ -265,10 +234,11 @@ class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
                         break;
                 }
             }
+
         }
             if (count($orders)) {
                 $mark = '';
-                if ($disposed !=intval($program->getSoldTickets()-$program->getCancelledTickets())) $mark=' style="color: red;"';
+                //if ($disposed !=intval($program->getSoldTickets()-$program->getCancelledTickets())) $mark=' style="color: red;"';
                 $i++;
                 $rows[]=array(
                  'uid' => $uid ,
@@ -281,10 +251,10 @@ class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
                  'shipped' => $shipped,
                  'not_shippeed' => $not_shipped,
                  'club_sold' => $program->getSoldTickets(),
-                 'club_cancelled' => $program->getCancelledTickets(),
+                 //'club_cancelled' => $program->getCancelledTickets(),
                  'club_max' => $program->getMaxTickets(),
-                 'club_corrected' => intval($program->getSoldTickets()-$program->getCancelledTickets()),
-                 'club_disposed' => $program->getDisposedTickets()
+                 //'club_corrected' => intval($program->getSoldTickets()-$program->getCancelledTickets()),
+                 //'club_disposed' => $program->getDisposedTickets()
                 );
             }
         }
@@ -479,17 +449,8 @@ class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
         $sku = $args['refundOrders']['program'];
         if ($sku) {
             $filtered_orders = [];
-            $filter = array(
-                'orderDateStart' => '2022-01-01',
-                'paymentStatus' => 'paid'
-            );
-            //\TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($filter);
-            //exit;
-            $orders = $this->itemRepository->findAll($filter);
-            //\TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($orders);
-            //exit;
+            $orders = $this->itemRepository->findAll();
             foreach ($orders as $order) {
-
                 foreach ($order->getProducts() as $product) {
                     if ($product->getSku()==$sku) {
                         //\TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($order);
@@ -510,13 +471,7 @@ class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
         $sku = $args['refundOrders']['program']; // find expects list
         if ($sku) {
             $filtered_orders = [];
-            $filter = array(
-                'orderDateStart' => '2022-01-01',
-                'paymentStatus' => 'paid'
-            );
-            $orders = $this->itemRepository->findAll($filter);
-            //\TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($orders[0]);
-            //\TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump(count($orders));
+            $orders = $this->itemRepository->findAll();
             foreach ($orders as $order) {
                 foreach ($order->getProducts() as $product) {
                     if ($product->getSku()==$sku) {
@@ -569,6 +524,7 @@ class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
             __FUNCTION__,
             [$data]
         );
+        exit;
     }
 
 
